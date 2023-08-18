@@ -40,3 +40,8 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# add
+.idea
+src/environments/environment.*.ts
+```
