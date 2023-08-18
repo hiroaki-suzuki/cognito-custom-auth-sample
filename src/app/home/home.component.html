@@ -1,10 +1,12 @@
-<amplify-authenticator>
+<amplify-authenticator [signUpAttributes]="['email']">
   <ng-template
     amplifySlot="authenticated"
     let-user="user"
     let-signOut="signOut">
-    <h1>ホーム</h1>
-    <h2>ようこそ {{ user.name }}!</h2>
-    <button (click)="signOut()">サインアウト</button>
+    <div class="content">
+      <h1>ホーム</h1>
+      <h2>ようこそ {{ user.name }}!</h2>
+      <button (click)="signOut()">サインアウト</button>
+    </div>
   </ng-template>
 </amplify-authenticator>

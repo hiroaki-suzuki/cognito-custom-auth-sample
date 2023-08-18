@@ -9,7 +9,6 @@ export const environment = {
     region: 'ap-northeast-1',
     userPoolId: '',
     userPoolWebClientId: '',
-    mandatorySignIn: true,
   }
 };
 

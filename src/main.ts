@@ -9,14 +9,7 @@ if (environment.production) {
   enableProdMode();
 }
 
-const conf = {
-  identityPoolId: '',
-  region: 'ap-northeast-1',
-  userPoolId: '',
-  userPoolWebClientId: '',
-}
-
-Amplify.configure(conf);
+Amplify.configure(environment.amplify);
 
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.error(err));
