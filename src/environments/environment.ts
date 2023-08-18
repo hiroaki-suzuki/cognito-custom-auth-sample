@@ -5,10 +5,13 @@
 export const environment = {
   production: false,
   amplify: {
-    identityPoolId: '',
-    region: 'ap-northeast-1',
-    userPoolId: '',
-    userPoolWebClientId: '',
+    Auth: {
+      identityPoolId: '',
+      region: 'ap-northeast-1',
+      userPoolId: '',
+      userPoolWebClientId: '',
+      authenticationFlowType: 'CUSTOM_AUTH',
+    }
   }
 };
 

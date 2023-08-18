@@ -1,4 +1,6 @@
-<amplify-authenticator [signUpAttributes]="['email']">
+<amplify-authenticator
+  [services]="services"
+  [signUpAttributes]="['email']">
   <ng-template
     amplifySlot="authenticated"
     let-user="user"

@@ -4,6 +4,14 @@ Description: A sample template for Cognito custom authentication.
 Parameters:
   ProjectName:
     Type: String
+  CreateAuthChallengeFunctionArn:
+    Type: String
+  DefineAuthChallengeFunctionArn:
+    Type: String
+  VerifyAuthChallengeFunctionArn:
+    Type: String
+  AuthChallengeSenderEmailAddress:
+    Type: String
 
 Resources:
   # Cognito
@@ -32,6 +40,10 @@ Resources:
         RecoveryMechanisms:
           - Name: admin_only
             Priority: 1
+      LambdaConfig:
+        CreateAuthChallenge: !Ref CreateAuthChallengeFunctionArn
+        DefineAuthChallenge: !Ref DefineAuthChallengeFunctionArn
+        VerifyAuthChallengeResponse: !Ref VerifyAuthChallengeFunctionArn
   UserPoolClient:
     Type: AWS::Cognito::UserPoolClient
     Properties:
@@ -125,3 +137,30 @@ Resources:
       Roles:
         unauthenticated: !GetAtt UnauthenticatedRole.Arn
         authenticated: !GetAtt AuthenticatedRole.Arn
+  # Lambda Permissions
+  CreateAuthChallengeFunctionPermission:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !Ref CreateAuthChallengeFunctionArn
+      Principal: "cognito-idp.amazonaws.com"
+      SourceArn: !GetAtt UserPool.Arn
+  DefineAuthChallengeFunctionPermission:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !Ref DefineAuthChallengeFunctionArn
+      Principal: "cognito-idp.amazonaws.com"
+      SourceArn: !GetAtt UserPool.Arn
+  VerifyAuthChallengeFunctionPermission:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !Ref VerifyAuthChallengeFunctionArn
+      Principal: "cognito-idp.amazonaws.com"
+      SourceArn: !GetAtt UserPool.Arn
+  # SES
+  AuthChallengeEmailIdentity:
+    Type: AWS::SES::EmailIdentity
+    Properties:
+      EmailIdentity: !Ref AuthChallengeSenderEmailAddress

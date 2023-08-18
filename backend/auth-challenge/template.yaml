@@ -1,0 +1,79 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  auth-challenge
+
+  Sample SAM Template for auth-challenge
+
+Globals:
+  Function:
+    Timeout: 3
+
+Parameters:
+  SenderEmailAddress:
+    Type: String
+
+Resources:
+  DefineAuthChallengeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: define-auth-challenge/
+      Handler: app.lambdaHandler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+  CreateAuthChallengeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: create-auth-challenge/
+      Handler: app.lambdaHandler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          SENDER_EMAIL_ADDRESS: !Ref SenderEmailAddress
+      Role: !GetAtt CreateAuthChallengeFunctionRole.Arn
+  CreateAuthChallengeFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: CreateAuthChallengeFunctionPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ses:SendEmail
+                  - ses:SendRawEmail
+                Resource: !Sub "arn:aws:ses:ap-northeast-1:${AWS::AccountId}:identity/${SenderEmailAddress}"
+  VerifyAuthChallengeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: verify-auth-challenge/
+      Handler: app.lambdaHandler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+
+Outputs:
+  DefineAuthChallengeFunction:
+    Description: "Define auth challenge Lambda Function ARN"
+    Value: !GetAtt DefineAuthChallengeFunction.Arn
+  CreateAuthChallengeFunction:
+    Description: "Create auth challenge Lambda Function ARN"
+    Value: !GetAtt CreateAuthChallengeFunction.Arn
+  VerifyAuthChallengeFunction:
+    Description: "Verify auth challenge Lambda Function ARN"
+    Value: !GetAtt VerifyAuthChallengeFunction.Arn
