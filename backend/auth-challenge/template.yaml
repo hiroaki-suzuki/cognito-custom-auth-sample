@@ -22,6 +22,11 @@ Resources:
       Runtime: nodejs18.x
       Architectures:
         - x86_64
+  DefineAuthChallengeFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${DefineAuthChallengeFunction}
+      RetentionInDays: 14
   CreateAuthChallengeFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -58,6 +63,11 @@ Resources:
                   - ses:SendEmail
                   - ses:SendRawEmail
                 Resource: !Sub "arn:aws:ses:ap-northeast-1:${AWS::AccountId}:identity/${SenderEmailAddress}"
+  CreateAuthChallengeFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${CreateAuthChallengeFunction}
+      RetentionInDays: 14
   VerifyAuthChallengeFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -66,6 +76,11 @@ Resources:
       Runtime: nodejs18.x
       Architectures:
         - x86_64
+  VerifyAuthChallengeFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${VerifyAuthChallengeFunction}
+      RetentionInDays: 14
 
 Outputs:
   DefineAuthChallengeFunction:
